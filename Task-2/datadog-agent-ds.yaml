@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: datadog-agent
+  labels:
+    app: datadog-agent
+spec:
+  selector:
+    matchLabels:
+      name: datadog-agent
+  template:
+    metadata:
+      labels:
+        name: datadog-agent
+    spec:
+      containers:
+      - name: datadog-agent
+        image: datadog/agent:latest
+        volumeMounts:
+          - name: datadog-config
+            mountPath: /etc/datadog-agent/datadog.yaml
+            subPath: datadog.yaml
+        ports:
+          - containerPort: 8125 # UDP DogstatsD port
+          - containerPort: 8126 # TCP DogstatsD port
+        env:
+          - name: DD_APM_ENABLED
+            value: "true"
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            memory: 128Mi
+      volumes:
+        - name: datadog-config
+          configMap:
+            name: datadog-agent-config
+

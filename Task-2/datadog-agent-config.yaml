@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datadog-agent-config
+data:
+  datadog.yaml: |
+    api_key: "<your-api-key>"
+    logs_enabled: true
+    logs_config:
+      service: "my-app"
+    logs_config_dd_url: "https://intake.logs.datadoghq.com/v1/input"
+    apm_config:
+      enabled: true
+      traces_config:
+        receiver: otelcol
+        otlp:
+          endpoint: "https://otlp-endpoint:4317"
+
+
